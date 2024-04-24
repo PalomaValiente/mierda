@@ -1,0 +1,50 @@
+<?php
+session_start();
+
+// Dummy credenciales
+$usuarios = array(
+    "usuario1" => "contraseña1",
+    "usuario2" => "contraseña2",
+    // Puedes agregar más usuarios aquí
+);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $usuario = $_POST['usuario'];
+    $contraseña = $_POST['contraseña'];
+
+    // Verificar si las credenciales coinciden con las almacenadas
+    if (isset($usuarios[$usuario]) && $usuarios[$usuario] == $contraseña) {
+        $_SESSION['usuario'] = $usuario;
+        header("Location: bienvenido.php"); // Redirigir a la página de bienvenida
+        exit();
+    } else {
+        $error = "Usuario o contraseña incorrectos";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inicio de Sesión Vulnerable</title>
+</head>
+<body>
+
+<h2>Inicio de Sesión Vulnerable</h2>
+
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    Usuario: <input type="text" name="usuario">
+    <br><br>
+    Contraseña: <input type="password" name="contraseña">
+    <br><br>
+    <input type="submit" name="submit" value="Iniciar Sesión">
+</form>
+
+<?php
+if (isset($error)) {
+    echo "<p style='color:red;'>$error</p>";
+}
+?>
+
+</body>
+</html>
